@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "icons": "node scripts/gen-icons.mjs"
+    "icons": "node scripts/gen-icons.mjs",
+    "qr": "node scripts/gen-qr.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.116.0",
@@ -24,6 +25,8 @@
     "@types/react-dom": "^19.1.9",
     "@vercel/node": "^5.9.9",
     "@vitejs/plugin-react": "^5.0.2",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
