@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dev-dist/
+.vercel/
+
+# Secrets — never commit. .env.example is the safe template.
+.env
+.env.local
+.env.*.local
+*.local
+
+.DS_Store
