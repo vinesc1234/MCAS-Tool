@@ -26,30 +26,34 @@ You need three accounts. All free except the API usage.
 
 One-time, on this computer. Use any name and email.
 
-```bash
+```powershell
 git config --global user.name "Your Name"
 ```
 
-```bash
+```powershell
 git config --global user.email "you@example.com"
 ```
 
 ## 3. Put the code on GitHub
 
-Create an empty repo at **github.com/new**. Name it `mcas-tracker`. **Private.**
-Don't add a README, .gitignore, or license — the project already has them.
+> **These commands are for PowerShell.** Windows PowerShell doesn't support `&&` as a separator —
+> use `;` between commands, as written below.
+
+Create an empty repo at **github.com/new**. **Private.** Don't add a README, .gitignore, or
+license — the project already has them, and they'd collide with the first commit.
 
 Then, from the project folder:
 
-```bash
-cd C:\Users\vines\Projects\mcas-tracker && git init -b main && git add . && git commit -m "MCAS trigger tracker"
+```powershell
+cd C:\Users\vines\Projects\mcas-tracker; git init -b main; git add .; git commit -m "MCAS trigger tracker"
 ```
 
-```bash
-git remote add origin https://github.com/YOUR-USERNAME/mcas-tracker.git && git push -u origin main
+```powershell
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git; git push -u origin main
 ```
 
-Replace `YOUR-USERNAME`. GitHub will ask you to sign in — use the browser prompt it offers.
+Replace `YOUR-USERNAME` and `YOUR-REPO`. GitHub will open a browser to sign you in; after that
+it's cached.
 
 ## 4. Deploy on Vercel
 
@@ -102,6 +106,6 @@ That's it. Take a photo and the ingredients should come back in a few seconds.
 
 Push to `main` and Vercel redeploys automatically:
 
-```bash
-git add . && git commit -m "what changed" && git push
+```powershell
+cd C:\Users\vines\Projects\mcas-tracker; git add .; git commit -m "what changed"; git push
 ```
