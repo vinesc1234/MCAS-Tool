@@ -47,7 +47,12 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSave || reaction === null) return;
+    // The button always looks live, so an incomplete form points at what is
+    // missing rather than doing nothing.
+    if (!canSave || reaction === null) {
+      if (!name.trim()) document.getElementById("entry-name")?.focus();
+      return;
+    }
     setSaving(true);
     try {
       await onSave({
@@ -257,7 +262,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
             Cancel
           </button>
         )}
-        <button type="submit" disabled={!canSave} className="btn-primary flex-1">
+        <button type="submit" className="btn-primary flex-1">
           {saving ? 'Saving…' : (submitLabel ?? 'Save entry')}
         </button>
       </div>
