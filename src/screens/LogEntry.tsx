@@ -28,8 +28,8 @@ export default function LogEntry({
   return (
     <div>
       <header className="mb-4">
-        <h1 className="text-2xl font-bold text-brand-900">Log something</h1>
-        <p className="text-sm text-gray-500">Snap it, then say how you reacted.</p>
+        <h1 className="text-2xl font-bold text-heading">Log something</h1>
+        <p className="text-sm text-muted">Snap it, then say how you reacted.</p>
       </header>
 
       <SpendWarning onOpenSettings={onOpenSettings} />
@@ -37,7 +37,7 @@ export default function LogEntry({
       {justSaved && (
         <div
           role="status"
-          className="mb-4 flex items-center justify-between rounded-xl bg-safe-bg px-4 py-3 ring-1 ring-green-200"
+          className="mb-4 flex items-center justify-between rounded-xl bg-safe-bg px-4 py-3 ring-1 ring-safe-line"
         >
           <span className="text-sm font-medium text-safe-fg">Saved “{justSaved}”</span>
           <button onClick={onDone} className="text-sm font-semibold text-safe-fg underline">

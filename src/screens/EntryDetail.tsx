@@ -2,7 +2,14 @@ import { useState } from 'react';
 import type { Entry } from '../types';
 import { deleteEntry, updateEntry, type NewEntry } from '../db/repository';
 import { useTracker, categoryFor, symptomLabel } from '../hooks/useTrackerData';
-import { REACTION_STYLES, formatDateTime, formatDuration, severityLabel } from '../lib/format';
+import {
+  REACTION_STYLES,
+  formatDateTime,
+  formatDuration,
+  severityColor,
+  severityLabel,
+} from '../lib/format';
+import { ArrowLeft } from 'lucide-react';
 import EntryForm from '../components/EntryForm';
 import PhotoThumb from '../components/PhotoThumb';
 
@@ -35,9 +42,9 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
     return (
       <div>
         <button onClick={() => setEditing(false)} className="btn-ghost mb-2 -ml-2">
-          ← Back
+          <ArrowLeft size={16} /> Back
         </button>
-        <h1 className="mb-4 text-2xl font-bold text-brand-900">Edit entry</h1>
+        <h1 className="mb-4 text-2xl font-bold text-heading">Edit entry</h1>
         <EntryForm
           initial={entry}
           onSave={handleSave}
@@ -51,7 +58,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
   return (
     <div className="space-y-4 pb-4">
       <button onClick={onClose} className="btn-ghost -ml-2">
-        ← History
+        <ArrowLeft size={16} /> History
       </button>
 
       {entry.photoIds.length > 0 && (
@@ -61,7 +68,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
               key={id}
               photoId={id}
               alt={entry.name}
-              className="h-48 w-48 shrink-0 rounded-2xl object-cover ring-1 ring-brand-200"
+              className="h-48 w-48 shrink-0 rounded-2xl object-cover ring-1 ring-line-strong"
             />
           ))}
         </div>
@@ -70,9 +77,9 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
       <div className="card">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-brand-900">{entry.name}</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              {category ? `${category.emoji} ${category.label} · ` : ''}
+            <h1 className="text-2xl font-bold text-heading">{entry.name}</h1>
+            <p className="mt-1 text-sm text-muted">
+              {category ? `${category.label} · ` : ''}
               {formatDateTime(entry.exposedAt)}
             </p>
           </div>
@@ -88,7 +95,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
         <div className="card">
           <h2 className="field-label">Symptoms</h2>
           {entry.symptoms.length === 0 ? (
-            <p className="text-sm text-gray-500">None recorded.</p>
+            <p className="text-sm text-muted">None recorded.</p>
           ) : (
             <ul className="space-y-2">
               {entry.symptoms
@@ -96,16 +103,22 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
                 .sort((a, b) => b.severity - a.severity)
                 .map((s) => (
                   <li key={s.symptomId} className="flex items-center gap-3">
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-brand-100">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-plum-100">
                       <div
-                        className="h-full rounded-full bg-brand-500"
-                        style={{ width: `${s.severity * 10}%` }}
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${s.severity * 10}%`,
+                          background: severityColor(s.severity),
+                        }}
                       />
                     </div>
-                    <span className="w-40 shrink-0 text-sm text-gray-800">
+                    <span className="w-40 shrink-0 text-sm text-ink">
                       {symptomLabel(symptoms, s.symptomId)}
                     </span>
-                    <span className="w-24 shrink-0 text-right text-xs font-semibold text-brand-700">
+                    <span
+                      className="w-24 shrink-0 text-right text-xs font-semibold"
+                      style={{ color: severityColor(s.severity) }}
+                    >
                       {s.severity} · {severityLabel(s.severity)}
                     </span>
                   </li>
@@ -113,14 +126,14 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
             </ul>
           )}
 
-          <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-brand-100 pt-4 text-sm">
+          <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 text-sm">
             <div>
-              <dt className="text-gray-500">Started after</dt>
-              <dd className="font-semibold text-brand-900">{formatDuration(entry.onsetMinutes)}</dd>
+              <dt className="text-muted">Started after</dt>
+              <dd className="font-semibold text-heading">{formatDuration(entry.onsetMinutes)}</dd>
             </div>
             <div>
-              <dt className="text-gray-500">Lasted</dt>
-              <dd className="font-semibold text-brand-900">
+              <dt className="text-muted">Lasted</dt>
+              <dd className="font-semibold text-heading">
                 {formatDuration(entry.durationMinutes)}
               </dd>
             </div>
@@ -135,7 +148,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
               <h2 className="field-label">Ingredients</h2>
               <div className="mb-4 flex flex-wrap gap-2">
                 {entry.ingredients.map((i) => (
-                  <span key={i} className="chip bg-brand-100 text-brand-800">
+                  <span key={i} className="chip bg-plum-100 text-heading">
                     {i}
                   </span>
                 ))}
@@ -145,7 +158,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
           {entry.notes && (
             <>
               <h2 className="field-label">Notes</h2>
-              <p className="text-sm whitespace-pre-wrap text-gray-700">{entry.notes}</p>
+              <p className="text-sm whitespace-pre-wrap text-ink">{entry.notes}</p>
             </>
           )}
         </div>
@@ -157,27 +170,27 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
         </button>
         <button
           onClick={() => setConfirmDelete(true)}
-          className="rounded-xl bg-white px-6 py-4 font-semibold text-react-fg ring-1 ring-red-200"
+          className="rounded-xl bg-surface px-6 py-4 font-semibold text-react-fg ring-1 ring-react-line"
         >
           Delete
         </button>
       </div>
 
       {confirmDelete && (
-        <div className="card ring-red-200">
-          <p className="mb-3 text-sm font-medium text-gray-800">
+        <div className="card ring-react-line">
+          <p className="mb-3 text-sm font-medium text-ink">
             Delete “{entry.name}” and its photos? This can't be undone.
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setConfirmDelete(false)}
-              className="flex-1 rounded-xl bg-white px-4 py-3 font-semibold text-gray-600 ring-1 ring-brand-200"
+              className="flex-1 rounded-xl bg-surface px-4 py-3 font-semibold text-muted ring-1 ring-line-strong"
             >
               Keep it
             </button>
             <button
               onClick={handleDelete}
-              className="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white"
+              className="flex-1 rounded-xl bg-react-fg px-4 py-3 font-semibold text-surface"
             >
               Delete
             </button>

@@ -40,9 +40,9 @@ export default function IngredientInput({ value, known, onChange }: IngredientIn
               key={tag}
               type="button"
               onClick={() => onChange(value.filter((t) => t !== tag))}
-              className="chip bg-brand-100 text-brand-800"
+              className="chip bg-plum-100 text-heading"
             >
-              {tag} <span className="ml-0.5 text-brand-500">×</span>
+              {tag} <span className="ml-0.5 text-accent-ink">×</span>
             </button>
           ))}
         </div>
@@ -83,7 +83,7 @@ export default function IngredientInput({ value, known, onChange }: IngredientIn
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => add(s)}
-              className="chip bg-white text-gray-700 ring-1 ring-brand-200"
+              className="chip bg-surface text-ink ring-1 ring-line-strong"
             >
               + {s}
             </button>

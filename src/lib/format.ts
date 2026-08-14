@@ -65,3 +65,22 @@ export function severityLabel(severity: number): string {
   if (severity <= 8) return 'Severe';
   return 'Very severe';
 }
+
+/**
+ * Severity 1-10 as a colour, amber through to deep red.
+ *
+ * Never green: severity only exists once a reaction has been recorded, so a
+ * 1/10 is a *mild reaction*, not a good outcome. Showing it green would put
+ * the same colour on "barely reacted" and "didn't react at all".
+ */
+const SEVERITY_STOPS = ['#c99a3c', '#c0703a', '#b4483c', '#96302b'] as const;
+
+export function severityColor(severity: number): string {
+  const clamped = Math.min(10, Math.max(1, severity));
+  // Map 1-10 across the stops, biased so the top two stops cover 7-10.
+  const index = Math.min(
+    SEVERITY_STOPS.length - 1,
+    Math.floor(((clamped - 1) / 9) * SEVERITY_STOPS.length),
+  );
+  return SEVERITY_STOPS[index];
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { RotateCcw, X } from 'lucide-react';
 import type { BodySystem, Symptom } from '../types';
 import { useTracker } from '../hooks/useTrackerData';
 import {
@@ -8,6 +9,7 @@ import {
   saveSymptom,
   saveSystem,
   storageEstimate,
+  isStoragePersisted,
 } from '../db/repository';
 import { entriesToCsv, downloadFile, timestampedName } from '../export/csv';
 import { buildBackup, restoreBackup } from '../export/json';
@@ -19,12 +21,14 @@ export default function Settings() {
   const { entries, systems, symptoms, categories, refresh } = useTracker();
   const [showArchived, setShowArchived] = useState(false);
   const [storage, setStorage] = useState<{ usage: number; quota: number } | null>(null);
+  const [persisted, setPersisted] = useState<boolean | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
   const importRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     storageEstimate().then(setStorage);
+    isStoragePersisted().then(setPersisted);
   }, [entries.length]);
 
   function notify(kind: 'ok' | 'error', text: string) {
@@ -78,7 +82,7 @@ export default function Settings() {
   return (
     <div className="space-y-4 pb-4">
       <header>
-        <h1 className="text-2xl font-bold text-brand-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-heading">Settings</h1>
       </header>
 
       {message && (
@@ -86,8 +90,8 @@ export default function Settings() {
           role="status"
           className={`rounded-xl px-4 py-3 text-sm font-medium ${
             message.kind === 'ok'
-              ? 'bg-safe-bg text-safe-fg ring-1 ring-green-200'
-              : 'bg-react-bg text-react-fg ring-1 ring-red-200'
+              ? 'bg-safe-bg text-safe-fg ring-1 ring-safe-line'
+              : 'bg-react-bg text-react-fg ring-1 ring-react-line'
           }`}
         >
           {message.text}
@@ -96,7 +100,7 @@ export default function Settings() {
 
       <section className="card">
         <h2 className="field-label">Your data</h2>
-        <p className="mb-3 text-sm text-gray-600">
+        <p className="mb-3 text-sm text-muted">
           Everything is stored on this device only — nothing is uploaded. Clearing your browser data
           would erase it, so keep a backup somewhere safe.
         </p>
@@ -108,7 +112,7 @@ export default function Settings() {
           <button
             onClick={handleBackup}
             disabled={busy !== null}
-            className="w-full rounded-xl bg-brand-100 px-5 py-4 font-semibold text-brand-800 transition active:bg-brand-200 disabled:opacity-40"
+            className="w-full rounded-xl bg-plum-100 px-5 py-4 font-semibold text-heading transition active:bg-plum-200 disabled:opacity-40"
           >
             {busy === 'backup' ? 'Building backup…' : 'Download full backup (JSON + photos)'}
           </button>
@@ -122,16 +126,24 @@ export default function Settings() {
           <button
             onClick={() => importRef.current?.click()}
             disabled={busy !== null}
-            className="w-full rounded-xl bg-white px-5 py-4 font-semibold text-gray-700 ring-1 ring-brand-200 disabled:opacity-40"
+            className="w-full rounded-xl bg-surface px-5 py-4 font-semibold text-ink ring-1 ring-line-strong disabled:opacity-40"
           >
             {busy === 'import' ? 'Restoring…' : 'Restore from backup'}
           </button>
         </div>
 
         {storage && (
-          <p className="mt-3 text-xs text-gray-500">
+          <p className="mt-3 text-xs text-muted">
             Using {formatBytes(storage.usage)}
             {storage.quota > 0 && ` of about ${formatBytes(storage.quota)} available`}.
+          </p>
+        )}
+
+        {persisted !== null && (
+          <p className={`mt-1 text-xs ${persisted ? 'text-safe-fg' : 'text-unsure-fg'}`}>
+            {persisted
+              ? 'Storage is protected — the browser has agreed not to clear this data on its own.'
+              : "The browser hasn't granted protected storage yet, so it could clear this data if the phone runs low on space. Keep a backup."}
           </p>
         )}
       </section>
@@ -150,7 +162,7 @@ export default function Settings() {
 
       <section className="card">
         <h2 className="field-label">About</h2>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted">
           A personal log for spotting MCAS patterns. It records what you tell it and does simple
           counting — it isn't a diagnostic tool, and patterns it surfaces are worth discussing with
           your doctor rather than acting on alone.
@@ -218,11 +230,11 @@ function SymptomEditor({
     <section className="card">
       <div className="mb-1 flex items-center justify-between">
         <h2 className="field-label mb-0">Symptoms</h2>
-        <button onClick={onToggleArchived} className="text-xs font-semibold text-brand-700">
+        <button onClick={onToggleArchived} className="text-xs font-semibold text-accent-ink">
           {showArchived ? 'Hide hidden' : 'Show hidden'}
         </button>
       </div>
-      <p className="mb-3 text-sm text-gray-500">
+      <p className="mb-3 text-sm text-muted">
         Add your own, or hide ones you never use. Hiding keeps past entries intact.
       </p>
 
@@ -236,7 +248,7 @@ function SymptomEditor({
               <div className="mb-1.5 flex items-center justify-between gap-2">
                 <h3
                   className={`text-sm font-bold ${
-                    system.archived ? 'text-gray-400 line-through' : 'text-brand-900'
+                    system.archived ? 'text-muted line-through' : 'text-heading'
                   }`}
                 >
                   {system.label}
@@ -246,7 +258,7 @@ function SymptomEditor({
                     await archiveSystem(system.id, !system.archived);
                     await onChanged();
                   }}
-                  className="text-xs font-semibold text-gray-400"
+                  className="text-xs font-semibold text-muted"
                 >
                   {system.archived ? 'Restore' : 'Hide'}
                 </button>
@@ -258,8 +270,8 @@ function SymptomEditor({
                     key={symptom.id}
                     className={`chip flex items-center gap-1.5 py-1 pr-1.5 text-xs ${
                       symptom.archived
-                        ? 'bg-gray-100 text-gray-400 line-through'
-                        : 'bg-brand-50 text-brand-900 ring-1 ring-brand-200'
+                        ? 'bg-sunk text-muted line-through'
+                        : 'bg-sunk text-heading ring-1 ring-line-strong'
                     }`}
                   >
                     <button onClick={() => rename(symptom)} className="underline-offset-2 hover:underline">
@@ -271,9 +283,9 @@ function SymptomEditor({
                         await onChanged();
                       }}
                       aria-label={symptom.archived ? 'Restore symptom' : 'Hide symptom'}
-                      className="flex h-5 w-5 items-center justify-center rounded-full bg-white/70 text-gray-500"
+                      className="flex h-5 w-5 items-center justify-center rounded-full bg-surface/70 text-muted"
                     >
-                      {symptom.archived ? '↺' : '×'}
+                      {symptom.archived ? <RotateCcw size={13} /> : <X size={13} />}
                     </button>
                   </span>
                 ))}
@@ -294,11 +306,11 @@ function SymptomEditor({
                         }
                       }}
                       placeholder="New symptom"
-                      className="w-36 rounded-full bg-white px-3 py-1 text-xs ring-1 ring-brand-300 outline-none"
+                      className="w-36 rounded-full bg-surface px-3 py-1 text-xs ring-1 ring-accent outline-none"
                     />
                     <button
                       onClick={() => addSymptom(system.id)}
-                      className="chip bg-brand-600 px-2.5 py-1 text-xs text-white"
+                      className="chip bg-accent px-2.5 py-1 text-xs text-on-accent"
                     >
                       Add
                     </button>
@@ -309,7 +321,7 @@ function SymptomEditor({
                       setAddingTo(system.id);
                       setDraft('');
                     }}
-                    className="chip bg-white px-2.5 py-1 text-xs text-brand-700 ring-1 ring-dashed ring-brand-300"
+                    className="chip bg-surface px-2.5 py-1 text-xs text-accent-ink ring-1 ring-dashed ring-accent"
                   >
                     + Add
                   </button>
@@ -320,7 +332,7 @@ function SymptomEditor({
         })}
       </div>
 
-      <div className="mt-4 border-t border-brand-100 pt-3">
+      <div className="mt-4 border-t border-line pt-3">
         {addingSystem ? (
           <div className="flex gap-2">
             <input
@@ -336,7 +348,7 @@ function SymptomEditor({
               placeholder="New body system"
               className="text-input flex-1 py-2 text-sm"
             />
-            <button onClick={addSystem} className="chip bg-brand-600 text-white">
+            <button onClick={addSystem} className="chip bg-accent text-on-accent">
               Add
             </button>
           </div>

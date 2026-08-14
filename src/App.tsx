@@ -1,4 +1,11 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
+import {
+  Camera,
+  ClipboardList,
+  Settings2,
+  TrendingUp,
+  type LucideIcon,
+} from 'lucide-react';
 import type { BodySystem, Category, Entry, Symptom } from './types';
 import { TrackerContext } from './hooks/useTrackerData';
 import {
@@ -7,6 +14,7 @@ import {
   listSymptoms,
   listSystems,
   purgeOrphanPhotos,
+  requestPersistentStorage,
 } from './db/repository';
 import LogEntry from './screens/LogEntry';
 import History from './screens/History';
@@ -18,11 +26,11 @@ const Trends = lazy(() => import('./screens/Trends'));
 
 type Tab = 'log' | 'history' | 'trends' | 'settings';
 
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'log', label: 'Log', icon: '📷' },
-  { id: 'history', label: 'History', icon: '📋' },
-  { id: 'trends', label: 'Patterns', icon: '📊' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' },
+const TABS: { id: Tab; label: string; icon: LucideIcon }[] = [
+  { id: 'log', label: 'Log', icon: Camera },
+  { id: 'history', label: 'History', icon: ClipboardList },
+  { id: 'trends', label: 'Patterns', icon: TrendingUp },
+  { id: 'settings', label: 'Settings', icon: Settings2 },
 ];
 
 export default function App() {
@@ -48,6 +56,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Fire and forget — a browser that refuses persistence shouldn't block startup.
+    void requestPersistentStorage();
+
     refresh()
       .then(() => purgeOrphanPhotos())
       .catch((err: unknown) => {
@@ -63,17 +74,17 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center text-gray-400">Loading…</div>
+      <div className="flex h-full items-center justify-center text-muted">Loading…</div>
     );
   }
 
   if (error) {
     return (
       <div className="mx-auto max-w-md p-6">
-        <div className="card ring-red-200">
+        <div className="card ring-react-line">
           <h1 className="mb-2 text-lg font-bold text-react-fg">Can't access local storage</h1>
-          <p className="text-sm text-gray-700">{error}</p>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="text-sm text-ink">{error}</p>
+          <p className="mt-2 text-sm text-muted">
             This app keeps everything on your device, so it needs browser storage. Try a normal
             (non-private) window.
           </p>
@@ -98,7 +109,7 @@ export default function App() {
           {tab === 'history' && <History onLogNew={() => setTab('log')} />}
           {tab === 'trends' && (
             <Suspense
-              fallback={<div className="pt-10 text-center text-gray-400">Loading charts…</div>}
+              fallback={<div className="pt-10 text-center text-muted">Loading charts…</div>}
             >
               <Trends />
             </Suspense>
@@ -107,25 +118,30 @@ export default function App() {
         </main>
 
         <nav
-          className="fixed inset-x-0 bottom-0 mx-auto max-w-2xl border-t border-brand-100 bg-white/95 backdrop-blur"
+          className="fixed inset-x-0 bottom-0 mx-auto max-w-2xl border-t border-line bg-surface/95 backdrop-blur"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <div className="grid grid-cols-4">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                aria-current={tab === t.id ? 'page' : undefined}
-                className={`flex flex-col items-center gap-0.5 py-3 text-[11px] font-semibold transition ${
-                  tab === t.id ? 'text-brand-700' : 'text-gray-400'
-                }`}
-              >
-                <span className="text-xl" aria-hidden="true">
-                  {t.icon}
-                </span>
-                {t.label}
-              </button>
-            ))}
+            {TABS.map((t) => {
+              const active = tab === t.id;
+              const Icon = t.icon;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex flex-col items-center gap-1 py-2.5 text-2xs font-semibold transition ${
+                    active ? 'text-accent' : 'text-muted'
+                  }`}
+                >
+                  {/* A heavier stroke on the active tab — an affordance the
+                      emoji version couldn't express, since emoji don't
+                      inherit colour or weight. */}
+                  <Icon size={21} strokeWidth={active ? 2.25 : 1.75} aria-hidden="true" />
+                  {t.label}
+                </button>
+              );
+            })}
           </div>
         </nav>
       </div>

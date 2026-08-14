@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
+import { Check, X } from 'lucide-react';
 import type { AnalysisResult } from '../analysis-types';
 import { CONCERN_LABELS } from '../analysis-types';
 import { useTracker } from '../hooks/useTrackerData';
@@ -57,13 +58,13 @@ export default function IngredientSuggestions({
   ];
 
   return (
-    <section className="card ring-brand-300">
+    <section className="card ring-accent">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-brand-900">
+          <h2 className="text-base font-bold text-heading">
             {result.identified ? result.name : 'Couldn’t read that photo'}
           </h2>
-          <p className="mt-0.5 text-sm text-gray-600">
+          <p className="mt-0.5 text-sm text-muted">
             {result.identified ? summary.headline : result.notes}
           </p>
         </div>
@@ -71,9 +72,9 @@ export default function IngredientSuggestions({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss suggestions"
-          className="shrink-0 rounded-full px-2 py-1 text-sm font-semibold text-gray-400"
+          className="shrink-0 rounded-full px-2 py-1 text-sm font-semibold text-muted"
         >
-          ✕
+          <X size={16} />
         </button>
       </div>
 
@@ -93,10 +94,10 @@ export default function IngredientSuggestions({
             return (
               <div key={group.key}>
                 <div className="mb-1.5 flex items-baseline gap-2">
-                  <h3 className="text-xs font-bold tracking-wide text-gray-500 uppercase">
+                  <h3 className="text-xs font-bold tracking-wide text-muted uppercase">
                     {group.title}
                   </h3>
-                  {group.hint && <span className="text-[11px] text-gray-400">{group.hint}</span>}
+                  {group.hint && <span className="text-2xs text-muted">{group.hint}</span>}
                 </div>
 
                 <div className="space-y-1.5">
@@ -115,7 +116,7 @@ export default function IngredientSuggestions({
         </div>
       )}
 
-      <div className="mt-4 flex gap-2 border-t border-brand-100 pt-3">
+      <div className="mt-4 flex gap-2 border-t border-line pt-3">
         <button
           type="button"
           onClick={() => onChange([...new Set([...selected, ...summary.suggestions.map((s) => s.name)])])}
@@ -152,29 +153,29 @@ function SuggestionRow({
       onClick={onToggle}
       aria-pressed={checked}
       className={`flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition ${
-        checked ? 'bg-brand-50 ring-1 ring-brand-300' : 'bg-white ring-1 ring-brand-100'
+        checked ? 'bg-sunk ring-1 ring-accent' : 'bg-surface ring-1 ring-line'
       }`}
     >
       <span
-        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-xs text-white transition ${
-          checked ? 'bg-brand-600' : 'bg-white ring-1 ring-brand-300'
+        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-xs text-on-accent transition ${
+          checked ? 'bg-accent' : 'bg-surface ring-1 ring-accent'
         }`}
         aria-hidden="true"
       >
-        {checked ? '✓' : ''}
+        {checked && <Check size={13} strokeWidth={3} />}
       </span>
 
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-2">
-          <span className="font-medium text-gray-900">{suggestion.name}</span>
+          <span className="font-medium text-ink">{suggestion.name}</span>
           {isPersonal && suggestion.history && (
-            <span className="rounded-full bg-react-bg px-2 py-0.5 text-[11px] font-bold text-react-fg">
+            <span className="rounded-full bg-react-bg px-2 py-0.5 text-2xs font-bold text-react-fg">
               {historyLabel(suggestion.history)}
             </span>
           )}
         </span>
         {(suggestion.note || suggestion.concern !== 'none') && (
-          <span className="mt-0.5 block text-xs text-gray-500">
+          <span className="mt-0.5 block text-xs text-muted">
             {suggestion.note || CONCERN_LABELS[suggestion.concern]}
           </span>
         )}

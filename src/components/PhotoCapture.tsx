@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Camera } from 'lucide-react';
 import type { AnalysisResult } from '../analysis-types';
 import { downscaleImage } from '../lib/image';
 import { savePhoto } from '../db/repository';
@@ -82,13 +83,13 @@ export default function PhotoCapture({ photoIds, onChange, onAnalysis }: PhotoCa
             <div key={id} className="relative shrink-0">
               <PhotoThumb
                 photoId={id}
-                className="h-28 w-28 rounded-xl object-cover ring-1 ring-brand-200"
+                className="h-28 w-28 rounded-xl object-cover ring-1 ring-line-strong"
               />
               <button
                 type="button"
                 aria-label="Remove photo"
                 onClick={() => onChange(photoIds.filter((p) => p !== id))}
-                className="absolute -top-1.5 -right-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg leading-none text-gray-600 shadow ring-1 ring-brand-200"
+                className="absolute -top-1.5 -right-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface text-lg leading-none text-muted shadow ring-1 ring-line-strong"
               >
                 ×
               </button>
@@ -102,20 +103,21 @@ export default function PhotoCapture({ photoIds, onChange, onAnalysis }: PhotoCa
           type="button"
           disabled={busy}
           onClick={() => cameraRef.current?.click()}
-          className="flex-1 rounded-xl bg-brand-600 px-4 py-4 text-base font-semibold text-white shadow-sm transition active:bg-brand-700 disabled:opacity-50"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-4 text-base font-semibold text-on-accent shadow-sm transition active:bg-accent-press disabled:opacity-50"
         >
-          {busy ? 'Saving…' : photoIds.length ? '📷 Add another' : '📷 Take photo'}
+          <Camera size={19} aria-hidden="true" />
+          {busy ? 'Saving…' : photoIds.length ? 'Add another' : 'Take photo'}
         </button>
         <button
           type="button"
           disabled={busy}
           onClick={() => libraryRef.current?.click()}
-          className="rounded-xl bg-brand-100 px-4 py-4 text-base font-semibold text-brand-800 transition active:bg-brand-200 disabled:opacity-50"
+          className="rounded-xl bg-plum-100 px-4 py-4 text-base font-semibold text-heading transition active:bg-plum-200 disabled:opacity-50"
         >
           Upload
         </button>
       </div>
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 text-xs text-muted">
         Point at the ingredients label if there is one — it gets read automatically.
       </p>
     </div>

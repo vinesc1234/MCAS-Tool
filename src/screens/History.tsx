@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Entry, Reaction } from '../types';
 import { useTracker, categoryFor, symptomLabel } from '../hooks/useTrackerData';
 import { REACTION_STYLES, formatDayHeading, formatDateTime } from '../lib/format';
+import { CategoryIcon } from '../lib/categoryIcons';
 import PhotoThumb from '../components/PhotoThumb';
 import EntryDetail from './EntryDetail';
 
@@ -43,8 +44,8 @@ export default function History({ onLogNew }: { onLogNew: () => void }) {
   return (
     <div className="pb-4">
       <header className="mb-4">
-        <h1 className="text-2xl font-bold text-brand-900">History</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-heading">History</h1>
+        <p className="text-sm text-muted">
           {entries.length} {entries.length === 1 ? 'entry' : 'entries'} logged
         </p>
       </header>
@@ -84,14 +85,15 @@ export default function History({ onLogNew }: { onLogNew: () => void }) {
               active={categoryFilter === c.id}
               onClick={() => setCategoryFilter(categoryFilter === c.id ? 'all' : c.id)}
             >
-              {c.emoji} {c.label}
+              <CategoryIcon category={c} className="h-4 w-4" />
+              {c.label}
             </FilterChip>
           ))}
       </div>
 
       {filtered.length === 0 ? (
         <div className="card text-center">
-          <p className="text-gray-600">
+          <p className="text-muted">
             {entries.length === 0 ? 'Nothing logged yet.' : 'Nothing matches those filters.'}
           </p>
           {entries.length === 0 && (
@@ -104,7 +106,7 @@ export default function History({ onLogNew }: { onLogNew: () => void }) {
         <div className="space-y-5">
           {grouped.map((group) => (
             <section key={group.heading}>
-              <h2 className="mb-2 px-1 text-xs font-bold tracking-wide text-gray-500 uppercase">
+              <h2 className="mb-2 px-1 text-xs font-bold tracking-wide text-muted uppercase">
                 {group.heading}
               </h2>
               <div className="space-y-2">
@@ -121,7 +123,7 @@ export default function History({ onLogNew }: { onLogNew: () => void }) {
                     <button
                       key={entry.id}
                       onClick={() => setOpenId(entry.id)}
-                      className="flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-sm ring-1 ring-brand-100 transition active:bg-brand-50"
+                      className="flex w-full items-center gap-3 rounded-2xl bg-surface p-3 text-left shadow-sm ring-1 ring-line transition active:bg-sunk"
                     >
                       {entry.photoIds[0] ? (
                         <PhotoThumb
@@ -130,27 +132,27 @@ export default function History({ onLogNew }: { onLogNew: () => void }) {
                           className="h-16 w-16 shrink-0 rounded-xl object-cover"
                         />
                       ) : (
-                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-2xl">
-                          {category?.emoji ?? '📦'}
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-sunk text-2xl">
+                          <CategoryIcon category={category} className="h-7 w-7 text-muted" />
                         </div>
                       )}
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="truncate font-semibold text-brand-900">
+                          <span className="truncate font-semibold text-heading">
                             {entry.name}
                           </span>
                           <span
-                            className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${style.bg} ${style.text}`}
+                            className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-bold ${style.bg} ${style.text}`}
                           >
                             {style.label}
                           </span>
                         </div>
-                        <p className="truncate text-xs text-gray-500">
+                        <p className="truncate text-xs text-muted">
                           {formatDateTime(entry.exposedAt)}
                         </p>
                         {topSymptoms.length > 0 && (
-                          <p className="mt-0.5 truncate text-xs text-gray-600">
+                          <p className="mt-0.5 truncate text-xs text-muted">
                             {topSymptoms.join(' · ')}
                             {entry.symptoms.length > 3 && ` +${entry.symptoms.length - 3}`}
                           </p>
@@ -180,8 +182,8 @@ function FilterChip({
   return (
     <button
       onClick={onClick}
-      className={`chip shrink-0 whitespace-nowrap ${
-        active ? 'bg-brand-600 text-white' : 'bg-white text-gray-700 ring-1 ring-brand-200'
+      className={`chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap ${
+        active ? 'bg-accent text-on-accent' : 'bg-surface text-ink ring-1 ring-line-strong'
       }`}
     >
       {children}

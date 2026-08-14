@@ -25,7 +25,7 @@ export default function LabelReadingSettings() {
   return (
     <section className="card">
       <h2 className="field-label">Reading labels from photos</h2>
-      <p className="mb-3 text-sm text-gray-600">
+      <p className="mb-3 text-sm text-muted">
         When on, each new photo is sent for analysis and its ingredients come back as
         suggestions. The photo is the only thing that leaves this device — your log,
         symptoms, and history never do.
@@ -40,23 +40,23 @@ export default function LabelReadingSettings() {
         }}
         aria-pressed={auto}
         className={`mb-4 flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition ${
-          auto ? 'bg-brand-50 ring-1 ring-brand-300' : 'bg-white ring-1 ring-brand-200'
+          auto ? 'bg-sunk ring-1 ring-accent' : 'bg-surface ring-1 ring-line-strong'
         }`}
       >
         <span>
-          <span className="block font-semibold text-brand-900">Analyze photos automatically</span>
-          <span className="block text-xs text-gray-500">
+          <span className="block font-semibold text-heading">Analyze photos automatically</span>
+          <span className="block text-xs text-muted">
             {auto ? 'On — about 1–2¢ per photo' : 'Off — no photos are sent anywhere'}
           </span>
         </span>
         <span
           className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-            auto ? 'bg-brand-600' : 'bg-gray-300'
+            auto ? 'bg-accent' : 'bg-line-strong'
           }`}
           aria-hidden="true"
         >
           <span
-            className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
+            className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface transition-all ${
               auto ? 'left-[22px]' : 'left-0.5'
             }`}
           />
@@ -66,7 +66,7 @@ export default function LabelReadingSettings() {
       <label htmlFor="passcode" className="field-label">
         Passcode
       </label>
-      <p className="mb-2 text-xs text-gray-500">
+      <p className="mb-2 text-xs text-muted">
         The shared passcode you set when deploying. Stored on this device only.
       </p>
       <div className="flex gap-2">
@@ -84,7 +84,7 @@ export default function LabelReadingSettings() {
           onClick={save}
           disabled={draft.trim() === getPasscode()}
           aria-label="Save passcode"
-          className="rounded-xl bg-brand-600 px-5 font-semibold text-white disabled:opacity-40"
+          className="rounded-xl bg-accent px-5 font-semibold text-on-accent disabled:opacity-40"
         >
           Save
         </button>

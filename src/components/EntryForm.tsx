@@ -3,6 +3,7 @@ import type { Entry, Reaction, SymptomEntry } from '../types';
 import { useTracker } from '../hooks/useTrackerData';
 import { listKnownIngredients, type NewEntry } from '../db/repository';
 import { REACTION_STYLES, toDatetimeLocal } from '../lib/format';
+import { CategoryIcon } from '../lib/categoryIcons';
 import PhotoCapture, { type AnalysisState } from './PhotoCapture';
 import SymptomAccordion from './SymptomAccordion';
 import IngredientInput from './IngredientInput';
@@ -90,16 +91,16 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
       </section>
 
       {analysis.status === 'running' && (
-        <div className="card flex items-center gap-3 text-sm text-gray-600">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-brand-200 border-t-brand-600" />
+        <div className="card flex items-center gap-3 text-sm text-muted">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-line-strong border-t-accent" />
           Reading the photo…
         </div>
       )}
 
       {analysis.status === 'error' && (
         <div className="card ring-unsure-bg">
-          <p className="text-sm text-gray-700">{analysis.message}</p>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="text-sm text-ink">{analysis.message}</p>
+          <p className="mt-1 text-xs text-muted">
             Everything else works — add ingredients by hand below.
           </p>
         </div>
@@ -138,13 +139,14 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
                   key={c.id}
                   type="button"
                   onClick={() => setCategoryId(c.id)}
-                  className={`chip ${
+                  className={`chip inline-flex items-center gap-1.5 ${
                     categoryId === c.id
-                      ? 'bg-brand-600 text-white'
-                      : 'bg-white text-gray-700 ring-1 ring-brand-200'
+                      ? 'bg-accent text-on-accent'
+                      : 'bg-surface text-ink ring-1 ring-line-strong'
                   }`}
                 >
-                  {c.emoji} {c.label}
+                  <CategoryIcon category={c} className="h-4 w-4" />
+                  {c.label}
                 </button>
               ))}
           </div>
@@ -182,7 +184,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
                 className={`rounded-xl px-2 py-5 text-sm font-semibold transition ${
                   active
                     ? `${style.bg} ${style.text} ring-2 ring-current`
-                    : 'bg-white text-gray-600 ring-1 ring-brand-200'
+                    : 'bg-surface text-muted ring-1 ring-line-strong'
                 }`}
               >
                 {style.label}
@@ -196,7 +198,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
         <>
           <section className="card">
             <h2 className="field-label">Which symptoms?</h2>
-            <p className="mb-3 text-sm text-gray-500">
+            <p className="mb-3 text-sm text-muted">
               Tap a body system to open it, then check what you felt.
             </p>
             <SymptomAccordion
@@ -227,7 +229,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
 
       <section className="card">
         <h2 className="field-label">Ingredients</h2>
-        <p className="mb-2 text-sm text-gray-500">
+        <p className="mb-2 text-sm text-muted">
           Anything you suspect. These get matched across entries on the Patterns tab.
         </p>
         <IngredientInput value={ingredients} known={known} onChange={setIngredients} />
@@ -250,7 +252,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl bg-white px-6 py-4 font-semibold text-gray-600 ring-1 ring-brand-200"
+            className="rounded-xl bg-surface px-6 py-4 font-semibold text-muted ring-1 ring-line-strong"
           >
             Cancel
           </button>
@@ -260,7 +262,7 @@ export default function EntryForm({ initial, onSave, onCancel, submitLabel }: En
         </button>
       </div>
       {!canSave && !saving && (
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-muted">
           {!name.trim() ? 'Add a name to save.' : 'Pick whether it caused a reaction.'}
         </p>
       )}

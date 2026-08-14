@@ -188,6 +188,35 @@ export async function importAll(payload: ImportPayload): Promise<void> {
   ]);
 }
 
+/**
+ * Asks the browser not to evict this database.
+ *
+ * Without this the log is "best-effort" storage — a browser under disk pressure
+ * can discard months of health data with no warning. Granting is at the
+ * browser's discretion (Chrome weighs engagement and installation; Safari
+ * generally grants for installed web apps), so this is a request, not a
+ * guarantee — the JSON backup remains the real safety net.
+ */
+export async function requestPersistentStorage(): Promise<boolean> {
+  if (!navigator.storage?.persist) return false;
+  try {
+    // Already granted on a previous launch — don't re-prompt.
+    if (await navigator.storage.persisted()) return true;
+    return await navigator.storage.persist();
+  } catch {
+    return false;
+  }
+}
+
+export async function isStoragePersisted(): Promise<boolean> {
+  if (!navigator.storage?.persisted) return false;
+  try {
+    return await navigator.storage.persisted();
+  } catch {
+    return false;
+  }
+}
+
 export async function storageEstimate(): Promise<{ usage: number; quota: number } | null> {
   if (!navigator.storage?.estimate) return null;
   const { usage = 0, quota = 0 } = await navigator.storage.estimate();

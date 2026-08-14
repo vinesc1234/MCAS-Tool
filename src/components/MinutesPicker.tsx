@@ -24,8 +24,8 @@ export default function MinutesPicker({ value, presets, onChange }: MinutesPicke
             }}
             className={`chip ${
               value === p && !custom
-                ? 'bg-brand-600 text-white'
-                : 'bg-white text-gray-700 ring-1 ring-brand-200'
+                ? 'bg-accent text-on-accent'
+                : 'bg-surface text-ink ring-1 ring-line-strong'
             }`}
           >
             {formatDuration(p)}
@@ -38,7 +38,7 @@ export default function MinutesPicker({ value, presets, onChange }: MinutesPicke
             if (custom) onChange(undefined);
           }}
           className={`chip ${
-            custom ? 'bg-brand-600 text-white' : 'bg-white text-gray-700 ring-1 ring-brand-200'
+            custom ? 'bg-accent text-on-accent' : 'bg-surface text-ink ring-1 ring-line-strong'
           }`}
         >
           Custom
@@ -56,7 +56,7 @@ export default function MinutesPicker({ value, presets, onChange }: MinutesPicke
             onChange={(e) => onChange(e.target.value === '' ? undefined : Number(e.target.value))}
             className="text-input w-32"
           />
-          <span className="text-sm text-gray-500">minutes</span>
+          <span className="text-sm text-muted">minutes</span>
         </div>
       )}
     </div>

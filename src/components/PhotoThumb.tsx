@@ -43,7 +43,7 @@ export default function PhotoThumb({ photoId, className, alt, onClick }: PhotoTh
   const url = usePhotoUrl(photoId);
 
   if (!url) {
-    return <div className={`animate-pulse bg-brand-100 ${className ?? ''}`} aria-hidden="true" />;
+    return <div className={`animate-pulse bg-plum-100 ${className ?? ''}`} aria-hidden="true" />;
   }
 
   return (

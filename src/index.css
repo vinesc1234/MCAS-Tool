@@ -1,27 +1,152 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-brand-50: #f7f4fd;
-  --color-brand-100: #ede6fa;
-  --color-brand-200: #dccef5;
-  --color-brand-300: #c2aaec;
-  --color-brand-400: #a37fe0;
-  --color-brand-500: #8a5fd4;
-  --color-brand-600: #7c5cbf;
-  --color-brand-700: #6544a0;
-  --color-brand-800: #533a82;
-  --color-brand-900: #45326a;
+/*
+ * Three layers: primitives (the plum ramp), a semantic layer that flips for
+ * dark mode, and role-named scales for type/radius/elevation/motion.
+ *
+ * Components consume the SEMANTIC layer only. That's what makes dark mode a
+ * token redefinition rather than a rewrite of every card.
+ */
 
+@theme {
+  /* ── primitives — muted plum, the accent family ──────────────── */
+  --color-plum-50: #f6f4f7;
+  --color-plum-100: #ece7ef;
+  --color-plum-200: #ddd4e2;
+  --color-plum-300: #c4b5cd;
+  --color-plum-400: #a289b1;
+  --color-plum-500: #8b6f9c;
+  --color-plum-600: #7c6390;
+  --color-plum-700: #674f78;
+  --color-plum-800: #533f60;
+  --color-plum-900: #3d2e47;
+
+  /* ── semantic surfaces + text — these flip ───────────────────── */
+  --color-page: #f6f4f7;
+  --color-surface: #ffffff;
+  --color-sunk: #f1eef3;
+  --color-ink: #22202a;
+  --color-muted: #6b6675;
+  --color-heading: #3d2e47;
+  --color-line: #e5e1ea;
+  --color-line-strong: #d5cfdc;
+
+  /* Accent = save button + active tab. Deliberately not a signal colour. */
+  --color-accent: #7c6390;
+  --color-accent-press: #674f78;
+  --color-accent-ink: #674f78;
+  --color-on-accent: #ffffff;
+
+  /* ── reaction tri-state ──────────────────────────────────────── *
+   * Desaturated, and the green pushed toward sage-teal so red/green
+   * don't pair up and read as festive.                             */
+  --color-react-bg: #fbeeec;
+  --color-react-fg: #b4483c;
+  --color-react-line: #f0d5d0;
+
+  --color-safe-bg: #edf6f1;
+  --color-safe-fg: #2f7d5c;
+  --color-safe-line: #cfe6da;
+
+  --color-unsure-bg: #fbf4e6;
+  --color-unsure-fg: #8a6414;
+  --color-unsure-line: #eddfc0;
+
+  /* ── type: only the deltas from Tailwind's defaults ──────────── */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.35;
+  --text-sm--line-height: 1.55;
+  --text-lg--line-height: 1.3;
+  --text-xl--line-height: 1.25;
+  --text-xl--letter-spacing: -0.015em;
+  --text-2xl--line-height: 1.15;
+  --text-2xl--letter-spacing: -0.021em;
+
+  /* ── radius, named by role rather than size ──────────────────── */
+  --radius-card: 1.125rem;
+  --radius-control: 0.75rem;
+  --radius-well: 0.625rem;
+
+  --shadow-card: 0 1px 2px rgb(61 46 71 / 0.05), 0 2px 6px rgb(61 46 71 / 0.04);
+  --shadow-lift: 0 4px 18px rgb(61 46 71 / 0.1);
+
+  /* Two lines that retune every `transition` utility in the app. */
+  --default-transition-duration: 160ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+
+/* ── dark, following the phone's setting ───────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='classic']) {
+    --color-page: #17151c;
+    --color-surface: #201d28;
+    --color-sunk: #1b1922;
+    --color-ink: #e6e2ec;
+    --color-muted: #948ea0;
+    --color-heading: #e6dcf2;
+    --color-line: #2e2a38;
+    --color-line-strong: #403a4e;
+
+    --color-accent: #a98bc0;
+    --color-accent-press: #bda2d0;
+    --color-accent-ink: #c3aad6;
+    --color-on-accent: #1a1620;
+
+    --color-react-bg: #35211f;
+    --color-react-fg: #e88a7d;
+    --color-react-line: #52302c;
+
+    --color-safe-bg: #162e24;
+    --color-safe-fg: #6fc49b;
+    --color-safe-line: #26483a;
+
+    --color-unsure-bg: #332913;
+    --color-unsure-fg: #e0b159;
+    --color-unsure-line: #52411d;
+
+    /* Ramp ends only — the middle is used for accent fills, which
+       already flip via --color-accent. */
+    --color-plum-50: #1e1a26;
+    --color-plum-100: #272132;
+    --color-plum-200: #332b40;
+    --color-plum-300: #453a55;
+
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-lift: 0 6px 22px rgb(0 0 0 / 0.45);
+  }
+}
+
+/* ── the previous look, reachable at ?style=classic for A/B ─────── */
+:root[data-theme='classic'] {
+  --color-page: #f7f4fd;
+  --color-surface: #ffffff;
+  --color-sunk: #f7f4fd;
+  --color-ink: #1f2937;
+  --color-muted: #6b7280;
+  --color-heading: #45326a;
+  --color-line: #ede6fa;
+  --color-line-strong: #dccef5;
+  --color-accent: #7c5cbf;
+  --color-accent-press: #6544a0;
+  --color-accent-ink: #6544a0;
+  --color-on-accent: #ffffff;
   --color-react-bg: #fef2f2;
   --color-react-fg: #b91c1c;
+  --color-react-line: #fecaca;
   --color-safe-bg: #f0fdf4;
   --color-safe-fg: #15803d;
+  --color-safe-line: #bbf7d0;
   --color-unsure-bg: #fffbeb;
   --color-unsure-fg: #b45309;
+  --color-unsure-line: #fde68a;
+  --radius-card: 1rem;
 }
 
 :root {
-  color-scheme: light;
+  /* `light dark` is what makes the native datetime picker, the search
+     clear button, and the range track render correctly in dark mode
+     instead of as white boxes. */
+  color-scheme: light dark;
 }
 
 html,
@@ -32,20 +157,20 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-brand-50);
-  color: #1f2937;
+  background: var(--color-page);
+  color: var(--color-ink);
   font-family:
     system-ui,
     -apple-system,
     'Segoe UI',
     Roboto,
     sans-serif;
-  /* Stop iOS from bouncing the whole page while inner panes scroll. */
+  /* Stop iOS bouncing the whole page while inner panes scroll. */
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Inputs at <16px make iOS Safari zoom on focus, which is jarring one-handed. */
+/* Inputs below 16px make iOS Safari zoom on focus, which is jarring one-handed. */
 input,
 textarea,
 select,
@@ -54,33 +179,91 @@ button {
   font-family: inherit;
 }
 
-@layer components {
-  .card {
-    @apply rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-100;
-  }
-
-  .field-label {
-    @apply mb-2 block text-sm font-semibold text-brand-900;
-  }
-
-  .text-input {
-    @apply w-full rounded-xl border-0 bg-brand-50 px-4 py-3 text-gray-900 ring-1 ring-brand-200 outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-brand-500;
-  }
-
-  .btn-primary {
-    @apply w-full rounded-xl bg-brand-600 px-5 py-4 text-base font-semibold text-white shadow-sm transition active:scale-[0.99] active:bg-brand-700 disabled:opacity-40;
-  }
-
-  .btn-ghost {
-    @apply rounded-xl px-4 py-2.5 text-sm font-semibold text-brand-700 transition active:bg-brand-100;
-  }
-
-  .chip {
-    @apply rounded-full px-3 py-1.5 text-sm font-medium transition;
+/* This audience has dizziness and migraine on the symptom list, and the app
+   smooth-scrolls after every save. Respect the setting properly. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Severity slider: large thumb so it's usable with shaky hands. */
+@layer components {
+  .card {
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 1.125rem 1.25rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Section heading inside a card. A real step above body text, so the
+     stack stops reading as identical boxes. */
+  .field-label {
+    @apply mb-3 block text-base font-semibold;
+    color: var(--color-heading);
+    letter-spacing: -0.01em;
+  }
+
+  .text-input {
+    @apply w-full border-0 px-4 py-3 outline-none;
+    background: var(--color-sunk);
+    color: var(--color-ink);
+    border-radius: var(--radius-control);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+  .text-input::placeholder {
+    color: var(--color-muted);
+    opacity: 0.75;
+  }
+  .text-input:focus {
+    box-shadow: inset 0 0 0 2px var(--color-accent);
+  }
+
+  .btn-primary {
+    @apply w-full px-5 py-4 text-base font-semibold transition active:scale-[0.99];
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-control);
+    box-shadow: var(--shadow-card);
+  }
+  .btn-primary:active {
+    background: var(--color-accent-press);
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2.5 text-sm font-semibold transition;
+    color: var(--color-accent-ink);
+    border-radius: var(--radius-control);
+  }
+  .btn-ghost:active {
+    background: var(--color-sunk);
+  }
+
+  .chip {
+    @apply rounded-full px-3.5 py-2 text-sm font-medium transition;
+  }
+
+  /* Neutral chip — the unselected state for category, filter, preset chips. */
+  .chip-idle {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+  .chip-on {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+}
+
+/* Severity slider: large thumb so it's usable with shaky hands.
+   Sized identically on both engines — these used to disagree by 6px. */
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
@@ -91,28 +274,43 @@ input[type='range'] {
 input[type='range']::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: 999px;
-  background: var(--color-brand-200);
+  background: var(--color-line-strong);
 }
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 28px;
-  width: 28px;
-  margin-top: -10px;
+  height: 26px;
+  width: 26px;
+  margin-top: -9px;
   border-radius: 999px;
-  background: var(--color-brand-600);
-  border: 3px solid #fff;
+  background: var(--color-accent);
+  border: 3px solid var(--color-surface);
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+/* Severity sliders set --sev inline; the thumb tracks it so the control
+   itself reads mild-to-severe rather than being a flat accent colour. */
+.severity-range::-webkit-slider-thumb {
+  background: var(--sev, var(--color-accent));
+}
+.severity-range::-moz-range-thumb {
+  background: var(--sev, var(--color-accent));
 }
 input[type='range']::-moz-range-track {
   height: 8px;
   border-radius: 999px;
-  background: var(--color-brand-200);
+  background: var(--color-line-strong);
 }
 input[type='range']::-moz-range-thumb {
-  height: 22px;
-  width: 22px;
+  height: 26px;
+  width: 26px;
+  box-sizing: border-box;
   border-radius: 999px;
-  background: var(--color-brand-600);
-  border: 3px solid #fff;
+  background: var(--color-accent);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

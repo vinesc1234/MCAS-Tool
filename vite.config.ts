@@ -38,4 +38,9 @@ export default defineConfig({
   server: {
     host: true,
   },
+  // Barrel-importing lucide otherwise fires hundreds of module requests in
+  // dev and makes HMR crawl.
+  optimizeDeps: {
+    include: ['lucide-react'],
+  },
 });

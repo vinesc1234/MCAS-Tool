@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Check, ChevronDown } from 'lucide-react';
 import type { BodySystem, Symptom, SymptomEntry } from '../types';
-import { severityLabel } from '../lib/format';
+import { severityColor, severityLabel } from '../lib/format';
 
 interface SymptomAccordionProps {
   systems: BodySystem[];
@@ -51,7 +52,7 @@ export default function SymptomAccordion({
             <div
               key={sys.id}
               className={`overflow-hidden rounded-xl ring-1 transition ${
-                count > 0 ? 'bg-brand-50 ring-brand-300' : 'bg-white ring-brand-100'
+                count > 0 ? 'bg-sunk ring-accent' : 'bg-surface ring-line'
               }`}
             >
               <button
@@ -60,24 +61,24 @@ export default function SymptomAccordion({
                 aria-expanded={isOpen}
                 className="flex w-full items-center justify-between px-4 py-4 text-left"
               >
-                <span className="font-semibold text-brand-900">{sys.label}</span>
+                <span className="font-semibold text-heading">{sys.label}</span>
                 <span className="flex items-center gap-2">
                   {count > 0 && (
-                    <span className="rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-bold text-white">
+                    <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-on-accent">
                       {count}
                     </span>
                   )}
                   <span
-                    className={`text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    className={`text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
                     aria-hidden="true"
                   >
-                    ▾
+                    <ChevronDown size={16} />
                   </span>
                 </span>
               </button>
 
               {isOpen && (
-                <div className="space-y-1 border-t border-brand-100 px-3 pt-2 pb-3">
+                <div className="space-y-1 border-t border-line px-3 pt-2 pb-3">
                   {sysSymptoms.map((symptom) => {
                     const severity = selected.get(symptom.id);
                     const isChecked = severity !== undefined;
@@ -87,18 +88,18 @@ export default function SymptomAccordion({
                           type="button"
                           onClick={() => toggleSymptom(symptom.id)}
                           aria-pressed={isChecked}
-                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition active:bg-brand-100"
+                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition active:bg-plum-100"
                         >
                           <span
-                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sm text-white transition ${
-                              isChecked ? 'bg-brand-600' : 'bg-white ring-1 ring-brand-300'
+                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sm text-on-accent transition ${
+                              isChecked ? 'bg-accent' : 'bg-surface ring-1 ring-accent'
                             }`}
                             aria-hidden="true"
                           >
-                            {isChecked ? '✓' : ''}
+                            {isChecked && <Check size={14} strokeWidth={3} />}
                           </span>
                           <span
-                            className={isChecked ? 'font-medium text-brand-900' : 'text-gray-700'}
+                            className={isChecked ? 'font-medium text-heading' : 'text-ink'}
                           >
                             {symptom.label}
                           </span>
@@ -109,11 +110,14 @@ export default function SymptomAccordion({
                             <div className="mb-1 flex items-baseline justify-between">
                               <label
                                 htmlFor={`sev-${symptom.id}`}
-                                className="text-xs font-medium text-gray-500"
+                                className="text-xs font-medium text-muted"
                               >
                                 Severity
                               </label>
-                              <span className="text-xs font-semibold text-brand-700">
+                              <span
+                                className="text-xs font-semibold"
+                                style={{ color: severityColor(severity) }}
+                              >
                                 {severity} · {severityLabel(severity)}
                               </span>
                             </div>
@@ -125,6 +129,10 @@ export default function SymptomAccordion({
                               step={1}
                               value={severity}
                               onChange={(e) => setSeverity(symptom.id, Number(e.target.value))}
+                              // The thumb tracks the severity colour, so the
+                              // control itself reads as mild vs. severe.
+                              style={{ '--sev': severityColor(severity) } as React.CSSProperties}
+                              className="severity-range"
                             />
                           </div>
                         )}
