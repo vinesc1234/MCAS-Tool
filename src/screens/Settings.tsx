@@ -112,7 +112,7 @@ export default function Settings() {
           <button
             onClick={handleBackup}
             disabled={busy !== null}
-            className="w-full rounded-xl bg-plum-100 px-5 py-4 font-semibold text-heading transition active:bg-plum-200 disabled:opacity-40"
+            className="w-full rounded-xl bg-iris-100 px-5 py-4 font-semibold text-heading transition active:bg-iris-200 disabled:opacity-40"
           >
             {busy === 'backup' ? 'Building backup…' : 'Download full backup (JSON + photos)'}
           </button>

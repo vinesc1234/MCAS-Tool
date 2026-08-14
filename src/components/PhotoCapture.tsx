@@ -112,7 +112,7 @@ export default function PhotoCapture({ photoIds, onChange, onAnalysis }: PhotoCa
           type="button"
           disabled={busy}
           onClick={() => libraryRef.current?.click()}
-          className="rounded-xl bg-plum-100 px-4 py-4 text-base font-semibold text-heading transition active:bg-plum-200 disabled:opacity-50"
+          className="rounded-xl bg-iris-100 px-4 py-4 text-base font-semibold text-heading transition active:bg-iris-200 disabled:opacity-50"
         >
           Upload
         </button>

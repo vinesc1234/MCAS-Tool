@@ -40,7 +40,7 @@ export default function IngredientInput({ value, known, onChange }: IngredientIn
               key={tag}
               type="button"
               onClick={() => onChange(value.filter((t) => t !== tag))}
-              className="chip bg-plum-100 text-heading"
+              className="chip bg-iris-100 text-heading"
             >
               {tag} <span className="ml-0.5 text-accent-ink">×</span>
             </button>

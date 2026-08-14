@@ -108,6 +108,31 @@ Two layers, and only one is real:
 - Anthropic Console spend limit — the hard cap. The in-app one is a convenience, not a guarantee.
   Don't describe it as a guarantee in user-facing copy.
 
+## The token layer
+
+`src/index.css` holds everything visual. Three layers: an `iris` primitive ramp, a **semantic layer**
+(`--color-surface`, `--color-ink`, `--color-accent`, `--color-line`…), and role-named scales for
+type, radius, elevation, and motion.
+
+**Components consume the semantic layer only.** That is what makes dark mode a token redefinition
+rather than an edit to all 27 card sites, and it is worth preserving — reaching for a raw ramp step
+or a literal hex in a component defeats it.
+
+Two rules the colours encode:
+
+- **The accent (`#6355B0` light / `#A896F5` dark) is the save button and active tab, and is never a
+  reaction or severity colour.** Keeping it clear of red/green/amber is deliberate, so a
+  call-to-action can't be mistaken for a signal.
+- **`severityColor()` in `src/lib/format.ts` runs amber → deep red and never green.** Severity only
+  exists once a reaction is recorded, so 1/10 is a *mild reaction*, not a good outcome; green would
+  collide with the green "no reaction" state.
+
+Dark mode follows `prefers-color-scheme`. `?style=classic` swaps in the pre-redesign palette for
+A/B comparison (switch lives in `src/main.tsx`) — delete it once the look is settled.
+
+Charts read the tokens at runtime via `useChartColors()` in `src/screens/Trends.tsx` rather than
+keeping their own palette, which had previously drifted out of sync.
+
 ## Gotchas
 
 - **Vercel env var changes need a redeploy.** They aren't applied to an existing deployment. The

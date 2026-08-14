@@ -77,7 +77,7 @@ export default function SpendBudget() {
         <span className="text-sm text-muted">of {formatUsd(status.cap)} this year</span>
       </div>
 
-      <div className="relative mb-2 h-2.5 overflow-hidden rounded-full bg-plum-100">
+      <div className="relative mb-2 h-2.5 overflow-hidden rounded-full bg-iris-100">
         <div
           className={`h-full rounded-full transition-all ${
             status.overCap ? 'bg-react-fg' : status.shouldWarn ? 'bg-unsure-fg' : 'bg-accent'

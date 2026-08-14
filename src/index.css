@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /*
- * Three layers: primitives (the plum ramp), a semantic layer that flips for
+ * Three layers: primitives (the iris ramp), a semantic layer that flips for
  * dark mode, and role-named scales for type/radius/elevation/motion.
  *
  * Components consume the SEMANTIC layer only. That's what makes dark mode a
@@ -9,17 +9,17 @@
  */
 
 @theme {
-  /* ── primitives — muted plum, the accent family ──────────────── */
-  --color-plum-50: #f6f4f7;
-  --color-plum-100: #ece7ef;
-  --color-plum-200: #ddd4e2;
-  --color-plum-300: #c4b5cd;
-  --color-plum-400: #a289b1;
-  --color-plum-500: #8b6f9c;
-  --color-plum-600: #7c6390;
-  --color-plum-700: #674f78;
-  --color-plum-800: #533f60;
-  --color-plum-900: #3d2e47;
+  /* ── primitives — periwinkle, the accent family ──────────────── */
+  --color-iris-50: #f5f4fa;
+  --color-iris-100: #e8e6f7;
+  --color-iris-200: #d3cfef;
+  --color-iris-300: #b6afe3;
+  --color-iris-400: #9187d0;
+  --color-iris-500: #7568bd;
+  --color-iris-600: #6355b0;
+  --color-iris-700: #524595;
+  --color-iris-800: #423878;
+  --color-iris-900: #302957;
 
   /* ── semantic surfaces + text — these flip ───────────────────── */
   --color-page: #f6f4f7;
@@ -27,14 +27,14 @@
   --color-sunk: #f1eef3;
   --color-ink: #22202a;
   --color-muted: #6b6675;
-  --color-heading: #3d2e47;
+  --color-heading: #302957;
   --color-line: #e5e1ea;
   --color-line-strong: #d5cfdc;
 
   /* Accent = save button + active tab. Deliberately not a signal colour. */
-  --color-accent: #7c6390;
-  --color-accent-press: #674f78;
-  --color-accent-ink: #674f78;
+  --color-accent: #6355b0;
+  --color-accent-press: #524595;
+  --color-accent-ink: #524595;
   --color-on-accent: #ffffff;
 
   /* ── reaction tri-state ──────────────────────────────────────── *
@@ -87,10 +87,10 @@
     --color-line: #2e2a38;
     --color-line-strong: #403a4e;
 
-    --color-accent: #a98bc0;
-    --color-accent-press: #bda2d0;
-    --color-accent-ink: #c3aad6;
-    --color-on-accent: #1a1620;
+    --color-accent: #a896f5;
+    --color-accent-press: #bbadf8;
+    --color-accent-ink: #bbadf8;
+    --color-on-accent: #15121c;
 
     --color-react-bg: #35211f;
     --color-react-fg: #e88a7d;
@@ -106,10 +106,10 @@
 
     /* Ramp ends only — the middle is used for accent fills, which
        already flip via --color-accent. */
-    --color-plum-50: #1e1a26;
-    --color-plum-100: #272132;
-    --color-plum-200: #332b40;
-    --color-plum-300: #453a55;
+    --color-iris-50: #1c1a28;
+    --color-iris-100: #252235;
+    --color-iris-200: #302c45;
+    --color-iris-300: #423c5e;
 
     --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-lift: 0 6px 22px rgb(0 0 0 / 0.45);

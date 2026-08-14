@@ -103,7 +103,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
                 .sort((a, b) => b.severity - a.severity)
                 .map((s) => (
                   <li key={s.symptomId} className="flex items-center gap-3">
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-plum-100">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-iris-100">
                       <div
                         className="h-full rounded-full"
                         style={{
@@ -148,7 +148,7 @@ export default function EntryDetail({ entry, onClose }: EntryDetailProps) {
               <h2 className="field-label">Ingredients</h2>
               <div className="mb-4 flex flex-wrap gap-2">
                 {entry.ingredients.map((i) => (
-                  <span key={i} className="chip bg-plum-100 text-heading">
+                  <span key={i} className="chip bg-iris-100 text-heading">
                     {i}
                   </span>
                 ))}

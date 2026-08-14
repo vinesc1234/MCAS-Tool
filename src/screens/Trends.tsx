@@ -149,7 +149,7 @@ export default function Trends() {
                     {Math.round(stat.rate * 100)}% · {stat.reacted}/{stat.reacted + stat.safe}
                   </span>
                 </div>
-                <div className="flex h-2.5 overflow-hidden rounded-full bg-plum-100">
+                <div className="flex h-2.5 overflow-hidden rounded-full bg-iris-100">
                   <div
                     className="bg-react-fg"
                     style={{ width: `${stat.rate * 100}%` }}

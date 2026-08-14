@@ -88,7 +88,7 @@ export default function SymptomAccordion({
                           type="button"
                           onClick={() => toggleSymptom(symptom.id)}
                           aria-pressed={isChecked}
-                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition active:bg-plum-100"
+                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition active:bg-iris-100"
                         >
                           <span
                             className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-sm text-on-accent transition ${
